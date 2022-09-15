@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = ""
+authors = ["onthemod <onthemod@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "hexlet_code"},{include = "brain_games"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+argparse = "^1.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+brain-games = "gendiff.scripts.gendiff:main"
