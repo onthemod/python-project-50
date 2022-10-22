@@ -17,11 +17,7 @@ def generate_diff(file_path1, file_path2):
     result = []
     for key in key_set1:
         if key in key_set2:
-            if file1_dict[key] == file2_dict[key]:
-                result.append(f'    {key}: {file1_dict[key]}')
-            else:
-                result.append(f'  - {key}: {file1_dict[key]}')
-                result.append(f'  + {key}: {file2_dict[key]}')
+            result.extend(get_line_to_append(key, file1_dict, file2_dict))
             key_set2.remove(key)
         else:
             result.append(f'  - {key}: {file1_dict[key]}')
@@ -33,6 +29,12 @@ def generate_diff(file_path1, file_path2):
     result.insert(0, '{')
     result.append('}')
     return '\n'.join(result)
+    
+def get_line_to_append(key, file1_dict, file2_dict):
+    if file1_dict[key] == file2_dict[key]:
+        return [f'    {key}: {file1_dict[key]}']
+    else:
+        return [f'  - {key}: {file1_dict[key]}', f'  + {key}: {file2_dict[key]}']
 
 
 def main():
