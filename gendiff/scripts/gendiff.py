@@ -15,7 +15,7 @@ def generate_diff(file_path1, file_path2):
     return get_diffs_of_dicts(file1_dict, file2_dict)
 
 
-def get_diffs_of_dicts(file1_dict, file2_dict)
+def get_diffs_of_dicts(file1_dict, file2_dict):
     key_set1 = set(file1_dict.keys())
     key_set2 = set(file2_dict.keys())
     result = []
