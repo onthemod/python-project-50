@@ -4,14 +4,18 @@ import json
 
 
 def sort_func(element):
-    dict = {' ' : '0', '-' : '1', '+' : '2'}
+    dict = {' ':'0', '-':'1', '+':'2'}
     res = element[4:element.index(':')]+dict[element[2]]
     return res
+
 
 def generate_diff(file_path1, file_path2):
     file1_dict = json.load(open(file_path1))
     file2_dict = json.load(open(file_path2))
+    return get_diffs_of_dicts(file1_dict, file2_dict)
 
+
+def get_diffs_of_dicts(file1_dict, file2_dict)
     key_set1 = set(file1_dict.keys())
     key_set2 = set(file2_dict.keys())
     result = []
@@ -29,7 +33,8 @@ def generate_diff(file_path1, file_path2):
     result.insert(0, '{')
     result.append('}')
     return '\n'.join(result)
-    
+
+
 def get_line_to_append(key, file1_dict, file2_dict):
     if file1_dict[key] == file2_dict[key]:
         return [f'    {key}: {file1_dict[key]}']
@@ -45,6 +50,7 @@ def main():
     args = parser.parse_args()
     res = generate_diff(args.first_file, args.second_file)
     print(res)
+
 
 if __name__ == '__main__':
     main()
