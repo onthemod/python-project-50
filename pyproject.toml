@@ -9,6 +9,7 @@ packages = [{include = "hexlet_code"},{include = "brain_games"}]
 [tool.poetry.dependencies]
 python = "^3.8"
 argparse = "^1.4.0"
+flake8 = "^5.0.4"
 
 
 [build-system]
