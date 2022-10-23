@@ -1,3 +1,4 @@
+steps:
 - name: Lint with flake8
   run: |
     pip install flake8
