@@ -44,7 +44,7 @@ def get_line_to_append(key, file1_dict, file2_dict):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Compares two configuration'
+    parser = argparse.ArgumentParser(description='Compares two configuration '
                                      ' files and shows a difference.')
     parser.add_argument('first_file', type=str)
     parser.add_argument('second_file', type=str)
