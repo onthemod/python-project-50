@@ -21,8 +21,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest poetry
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: codeclimate check test coverage
-        uses: aktions/codeclimate-test-reporter@v1
+      - name: code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
-          codeclimate-test-reporter-id: ${{ secrets.CC_TEST_REPORTER_ID }}
-          command: after-build
+          coverageCommand: make test-coverage
