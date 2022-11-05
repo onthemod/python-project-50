@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["onthemod <onthemod@yandex.ru>"]
 readme = "README.md"
-packages = [{include = "hexlet_code"},{include = "brain_games"}]
+packages = [{include = "gendiff"}]
 
 [tool.poetry.dependencies]
 python = "^3.8"

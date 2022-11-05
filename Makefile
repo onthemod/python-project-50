@@ -18,3 +18,6 @@ package-install-force:
 
 make lint:
 	poetry run flake8 gendiff
+
+say-hello:
+	@echo 'hello'
