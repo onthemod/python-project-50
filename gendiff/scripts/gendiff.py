@@ -3,44 +3,56 @@ import argparse
 import json
 
 
-def sort_func(element):
-    dict = {' ': '0', '-': '1', '+': '2'}
-    res = element[4:element.index(':')] + dict[element[2]]
-    return res
-
-
 def generate_diff(file_path1, file_path2):
     file1_dict = json.load(open(file_path1))
     file2_dict = json.load(open(file_path2))
     return get_diffs_of_dicts(file1_dict, file2_dict)
 
 
-def get_diffs_of_dicts(file1_dict, file2_dict):
-    key_set1 = set(file1_dict.keys())
-    key_set2 = set(file2_dict.keys())
+def get_keys(dict1, dict2):
+    keyset = set()
+    keyset.update(dict1.keys())
+    keyset.update(dict2.keys())
+    keylist = list(keyset)
+    keylist.sort()
+    return keylist
+
+
+def get_diff_for_key(key, value1, value2):
+    if value1 is None:
+        return [wrap_added_pair(key, value2)]
+    if value2 is None:
+        return [wrap_removed_pair(key, value1)]
+    if value1 == value2:
+        return [wrap_not_changed_pair(key, value1)]
+    return [wrap_removed_pair(key, value1), wrap_added_pair(key, value2)]
+
+
+def wrap_added_pair(key, value):
+    return f'  + {key}: {value}'
+
+
+def wrap_removed_pair(key, value):
+    return f'  - {key}: {value}'
+
+
+def wrap_not_changed_pair(key, value):
+    return f'    {key}: {value}'
+ 
+
+def get_diffs_of_dicts_list(dict1, dict2):
     result = []
-    for key in key_set1:
-        if key in key_set2:
-            result.extend(get_line_to_append(key, file1_dict, file2_dict))
-            key_set2.remove(key)
-        else:
-            result.append(f'  - {key}: {file1_dict[key]}')
+    for key in get_keys(dict1, dict2):
+        diff_strings = get_diff_for_key(key, dict1.get(key), dict2.get(key))
+        result.extend(diff_strings)
+    return result
+    
 
-    for key in key_set2:
-        result.append(f'  + {key}: {file2_dict[key]}')
-
-    result.sort(key=sort_func)
-    result.insert(0, '{')
-    result.append('}')
-    return '\n'.join(result)
-
-
-def get_line_to_append(key, file1_dict, file2_dict):
-    if file1_dict[key] == file2_dict[key]:
-        return [f'    {key}: {file1_dict[key]}']
-    else:
-        return [f'  - {key}: {file1_dict[key]}',
-                f'  + {key}: {file2_dict[key]}']
+def get_diffs_of_dicts(dict1, dict2):
+    diff_list = get_diffs_of_dicts_list(dict1, dict2)
+    diff_list.insert(0, '{')
+    diff_list.append('}')
+    return '\n'.join(diff_list)
 
 
 def main():
