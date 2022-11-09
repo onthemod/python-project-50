@@ -1,12 +1,18 @@
 #!/usr/bin/env python3#!/usr/bin/env python3
 import argparse
 import json
+import os
 
 
 def generate_diff(file_path1, file_path2):
-    file1_dict = json.load(open(file_path1))
-    file2_dict = json.load(open(file_path2))
+    file1_dict = get_dictionary_from_file(file_path1)
+    file2_dict = get_dictionary_from_file(file_path2)
     return get_diffs_of_dicts(file1_dict, file2_dict)
+    
+    
+def get_dictionary_from_file(file_path):
+    o = open(file_path)
+    return json.load(o)
 
 
 def get_keys(dict1, dict2):
