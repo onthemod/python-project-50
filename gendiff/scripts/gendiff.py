@@ -1,7 +1,6 @@
 #!/usr/bin/env python3#!/usr/bin/env python3
 import argparse
 import json
-import os
 import yaml
 
 
@@ -10,14 +9,14 @@ def generate_diff(file_path1, file_path2):
     file2_dict = get_dictionary_from_file(file_path2)
     print(file1_dict)
     return get_diffs_of_dicts(file1_dict, file2_dict)
-    
-    
+
+
 def get_dictionary_from_file(file_path):
     o = open(file_path)
     if file_path[-4:] == 'json':
         return json.load(o)
     if file_path[-4:] == 'yaml' or file_path[-3:] == 'yml':
-        return(yaml.safe_load(o))
+        return yaml.safe_load(o)
 
 
 def get_keys(dict1, dict2):
@@ -49,7 +48,7 @@ def wrap_removed_pair(key, value):
 
 def wrap_not_changed_pair(key, value):
     return f'    {key}: {value}'
- 
+
 
 def get_diffs_of_dicts_list(dict1, dict2):
     result = []
@@ -57,7 +56,7 @@ def get_diffs_of_dicts_list(dict1, dict2):
         diff_strings = get_diff_for_key(key, dict1.get(key), dict2.get(key))
         result.extend(diff_strings)
     return result
-    
+
 
 def get_diffs_of_dicts(dict1, dict2):
     diff_list = get_diffs_of_dicts_list(dict1, dict2)
