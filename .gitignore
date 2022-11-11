@@ -1,3 +1,5 @@
 .venv
 setup.cfg
 dist
+.coverage
+coverage.xml
