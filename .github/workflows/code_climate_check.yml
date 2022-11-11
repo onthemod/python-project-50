@@ -22,6 +22,7 @@ jobs:
           pip install poetry
           pip install pytest
           pip install pytest-cov
+          pip install PyYAML
           make install  
       - uses: paambaati/codeclimate-action@v2.7.4
         env:
