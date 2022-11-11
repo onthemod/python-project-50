@@ -2,17 +2,22 @@
 import argparse
 import json
 import os
+import yaml
 
 
 def generate_diff(file_path1, file_path2):
     file1_dict = get_dictionary_from_file(file_path1)
     file2_dict = get_dictionary_from_file(file_path2)
+    print(file1_dict)
     return get_diffs_of_dicts(file1_dict, file2_dict)
     
     
 def get_dictionary_from_file(file_path):
     o = open(file_path)
-    return json.load(o)
+    if file_path[-4:] == 'json':
+        return json.load(o)
+    if file_path[-4:] == 'yaml' or file_path[-3:] == 'yml':
+        return(yaml.safe_load(o))
 
 
 def get_keys(dict1, dict2):
