@@ -92,7 +92,7 @@ def get_dictionary_string(d, inset):
 
 
 def get_string_of_value(value):
-    if instanceof(value, dict):
+    if isinstance(value, dict):
         res = "{"
         for k, v in value.items():
             res=res+'\n'+ '    '+k+': '+v
