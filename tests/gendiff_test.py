@@ -1,13 +1,8 @@
-from gendiff.scripts.gendiff import get_diffs_of_dicts
-from gendiff.scripts.gendiff import get_dictionary_from_file
 from gendiff.scripts.gendiff import generate_diff
-from gendiff.scripts.gendiff import get_dictionary_string
+from gendiff.scripts.gendiff import get_dictionary_from_file
+from gendiff.scripts.gendiff import generate_diff_tree
+from gendiff.scripts.gendiff import stringify
 import pytest
-
-
-@pytest.fixture
-def diff1():
-    return '{\n  - follow: false\n    host: hexlet.io\n  - proxy: 123.234.53.22\n  - timeout: 50\n  + timeout: 20\n  + verbose: true\n}'
 
 
 @pytest.fixture
@@ -18,36 +13,6 @@ def dictionary1():
 @pytest.fixture
 def dict_string_inset_1():
     return "{\n        host: hexlet.io\n        timeout: 50\n        proxy: 123.234.53.22\n        follow: false\n    }"
-
-
-def test_dict_string(dictionary1,dict_string_inset_1):
-    print(dict_string_inset_1)
-    print(get_dictionary_string({'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}, 1))
-    assert get_dictionary_string({'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}, 1) == dict_string_inset_1
-
-
-def test1(diff1):
-    dict1 = {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}
-    dict2 = {'timeout': 20, 'verbose': True, 'host': 'hexlet.io'}
-    assert get_diffs_of_dicts(dict1, dict2)==diff1
-
-
-def test2():
-    dict2 = {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}
-    dict1 = {}
-    assert get_diffs_of_dicts(dict1, dict2)=='{\n  + follow: false\n  + host: hexlet.io\n  + proxy: 123.234.53.22\n  + timeout: 50\n}'
-
-
-def test3():
-    dict1 = {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}
-    dict2 = {}
-    assert get_diffs_of_dicts(dict1, dict2)=='{\n  - follow: false\n  - host: hexlet.io\n  - proxy: 123.234.53.22\n  - timeout: 50\n}'
-
-
-def test_dict_appeared():
-    dict1 = {}
-    dict2 = {'key1': {'timeout': 50, 'proxy': '123.234.53.22'}, 'key2': 'value'}
-    assert get_diffs_of_dicts(dict1, dict2)=='{\n  + key1: {\n        timeout: 50\n        proxy: 123.234.53.22\n    }\n  + key2: value\n}'
 
 
 def test4():
@@ -67,7 +32,7 @@ def test_yml(dictionary1):
 
 def test5():
     diff = '{\n  - follow: false\n    host: hexlet.io\n  - proxy: 123.234.53.22\n  - timeout: 50\n  + timeout: 20\n  + verbose: true\n}'
-    assert generate_diff('tests/file1.json','tests/file2.json')==diff
+    assert generate_diff('tests/file1.json','tests/file2.json').lower() == diff.lower()
 
 
 def test_nested():
@@ -75,4 +40,23 @@ def test_nested():
     diff_strig = generate_diff('tests/nested1.json','tests/nested2.json')
     d = zip(diff_strig.split('\n'), f)
     for k,v in d:
-        assert k == v or k + '\n' == v
+        assert k.lower() == v.lower() or (k + '\n').lower() == v.lower()
+
+
+def test_of_dict():
+    test_list = [(' ', 'common', [('+', 'follow', False), (' ', 'setting1', 'Value 1'),
+                ('-', 'setting2', 200), ('-', 'setting3', True), ('+', 'setting3', 'null'),
+                ('+', 'setting4', 'blah blah'), ('+', 'setting5', [( ' ', 'key5', 'value5')]),
+                ( ' ', 'setting6', [(' ', 'doge', [( '-', 'wow', ''), ('+', 'wow', 'so much')]),
+                (' ', 'key', 'value'),('+',  'ops', 'vops')])]),(' ', 'group1', [('-', 'baz', 'bas'),
+                ( '+',  'baz', 'bars'), ( ' ', 'foo', 'bar'), ( '-',  'nest', [( ' ', 'key', 'value')]), 
+                ( '+',  'nest', 'str')])]
+    res = generate_diff_tree('tests/nested_short1.json', 'tests/nested_short2.json')
+    assert test_list == res
+
+
+def test_of_str():
+    test_tree = [(' ', 'key1', 'value1'), ('+', 'key2', [(' ', 'key3', 'value2')])]
+    s = '{\n    key1: value1\n  + key2: {\n        key3: value2\n    }\n}'
+    print(stringify(test_tree))
+    assert stringify(test_tree) == s

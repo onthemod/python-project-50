@@ -5,9 +5,25 @@ import yaml
 
 
 def generate_diff(file_path1, file_path2):
+    diff_tree = generate_diff_tree(file_path1, file_path2)
+    return stringify(diff_tree)
+
+
+def generate_diff_tree(file_path1, file_path2):
     file1_dict = get_dictionary_from_file(file_path1)
     file2_dict = get_dictionary_from_file(file_path2)
-    return get_diffs_of_dicts(file1_dict, file2_dict)
+    return get_diff_tree_of_dicts(file1_dict, file2_dict)
+
+
+def get_diff_tree_of_dicts(dict1, dict2):
+    dict1 = cut_null_values(dict1)
+    dict2 = cut_null_values(dict2)
+    result = []
+    for key in get_keys(dict1, dict2):
+        diff_strings = get_diff_tuple_list(
+            key, dict1.get(key), dict2.get(key))
+        result.extend(diff_strings)
+    return result
 
 
 def get_dictionary_from_file(file_path):
@@ -22,7 +38,6 @@ def cut_null_values(dictionary):
     result = {}
     for k, v in dictionary.items():
         if v is None:
-            print("isNone")
             v = 'null'
         result[k] = v
     return result
@@ -37,87 +52,63 @@ def get_keys(dict1, dict2):
     return keylist
 
 
-def get_diff_for_key(key, value1, value2, inset):
+def get_diff_tuple_list(key, value1, value2):
     if value1 is None:
-        return [wrap_added_pair(key, value2, inset)]
+        return [get_added_pair_tuple(key, value2)]
     if value2 is None:
-        return [wrap_removed_pair(key, value1, inset)]
+        return [get_removed_pair_tuple(key, value1)]
     if value1 == value2:
-        return [wrap_not_changed_pair(key, value1, inset)]
+        return [get_non_changed_pair_tuple(key, value1)]
     if isinstance(value1, dict) and isinstance(value2, dict):
-        return [wrap_not_changed_pair(
-            key, get_diffs_of_dicts_list(value1, value2, inset + 1), inset)]
-    return [wrap_removed_pair(key, value1, inset),
-            wrap_added_pair(key, value2, inset)]
+        return [get_non_changed_pair_tuple(
+            key, get_diff_tree_of_dicts(value1, value2))]
+    return [get_removed_pair_tuple(key, value1),
+            get_added_pair_tuple(key, value2)]
 
 
-def added_pair_key_prefix(key):
-    return f'  + {key}: '
+def get_added_pair_tuple(key, value):
+    value = get_dict_list(value)
+    return ('+', key, value)
 
 
-def removed_pair_key_prefix(key):
-    return f'  - {key}: '
+def get_removed_pair_tuple(key, value):
+    value = get_dict_list(value)
+    return ('-', key, value)
 
 
-def not_changed_pair_key_prefix(key):
-    return f'    {key}: '
+def get_non_changed_pair_tuple(key, value):
+    value = get_dict_list(value)
+    return (' ', key, value)
 
 
-def suffix(value, inset=0):
-    if isinstance(value, list):
-        return '\n'.join(value)
-    if isinstance(value, dict):
-        return get_dictionary_string(value, inset + 1)
-    if isinstance(value, bool):
-        return str(value).lower()
-    return str(value)
+def stringify(lst, inset=0):
+    res = '{\n'
+    spacing = inset * 4 * ' '
+    for item in lst:
+        res = res + spacing + string_of_item(item, inset)
+    res = res + spacing + '}'
+    return res
 
 
-def wrap_added_pair(key, value, inset):
-    return ' ' * 4 * inset + added_pair_key_prefix(key) + suffix(value, inset)
+def string_of_item(item, inset):
+    s, k, v = item
+    v = get_value_string(v, inset)
+    return f'  {s} {k}: {v}\n'
 
 
-def wrap_removed_pair(key, value, inset):
-    return ' ' * 4 * inset + removed_pair_key_prefix(key) + suffix(value, inset)
+def get_value_string(val, inset=0):
+    if isinstance(val, list):
+        return stringify(val, inset + 1)
+    return val
 
 
-def wrap_not_changed_pair(key, value, inset):
-    return ' ' * 4 * inset + not_changed_pair_key_prefix(key) + \
-           suffix(value, inset)
-
-
-def get_dictionary_string(d, inset):
-    stringlist = ['{']
-    for key, value in d.items():
-        stringlist.append(wrap_not_changed_pair(key, value, inset))
-    stringlist.append(inset * 4 * ' ' + '}')
-    return '\n'.join(stringlist)
-
-
-def get_string_of_value(value):
-    if isinstance(value, dict):
-        res = "{"
-        for k, v in value.items():
-            res = res + f'\n    {k}: {v}'
-        res = res + '\n}'
-
-
-def get_diffs_of_dicts_list(dict1, dict2, inset=0):
-    dict1 = cut_null_values(dict1)
-    dict2 = cut_null_values(dict2)
-    result = []
-    for key in get_keys(dict1, dict2):
-        diff_strings = get_diff_for_key(
-            key, dict1.get(key), dict2.get(key), inset)
-        result.extend(diff_strings)
-    result.insert(0, '{')
-    result.append(inset * 4 * ' ' + '}')
-    return result
-
-
-def get_diffs_of_dicts(dict1, dict2):
-    diff_list = get_diffs_of_dicts_list(dict1, dict2)
-    return '\n'.join(diff_list)
+def get_dict_list(d):
+    if isinstance(d, dict):
+        res = []
+        for k, v in d.items():
+            res.append(get_non_changed_pair_tuple(k, v))
+        return res
+    return d
 
 
 def main():
