@@ -9,14 +9,13 @@ from treenode import create_added_node
 from treenode import create_removed_node
 from treenode import create_nonchanged_node
 from treenode import create_updated_node
-import stylish
+import formaters.stylish as stylish
+import formaters.plain as plain
 
 
-def generate_diff(file_path1, file_path2):
-    print(sys.path)
+def generate_diff(file_path1, file_path2, formater=stylish):
     diff_tree = generate_diff_tree(file_path1, file_path2)
-    print(diff_tree)
-    return stylish.stringify(diff_tree)
+    return formater.stringify(diff_tree)
 
 
 def generate_diff_tree(file_path1, file_path2):
@@ -82,7 +81,10 @@ def main():
     parser.add_argument('second_file', type=str)
     parser.add_argument('-f', '--format', type=str, help='set format of output')
     args = parser.parse_args()
-    res = generate_diff(args.first_file, args.second_file)
+    formater = stylish
+    if args.format == 'plain':
+        formater = plain
+    res = generate_diff(args.first_file, args.second_file, formater)
     print(res)
 
 

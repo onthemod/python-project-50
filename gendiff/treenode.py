@@ -35,6 +35,16 @@ def is_updated(node):
     return node[0] == '-+'
 
 
+def get_key(node):
+    return node[1]
+    
+    
+def get_value(node):
+    if len(node) == 4:
+        return (node[2], node[3])
+    return node[2]
+
+
 def split_dict_value(value):
     if isinstance(value, dict):
         res = []

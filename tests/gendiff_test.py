@@ -1,7 +1,8 @@
 from gendiff.scripts.gendiff import generate_diff
 from gendiff.scripts.gendiff import get_dictionary_from_file
 from gendiff.scripts.gendiff import generate_diff_tree
-import gendiff.stylish as stylish
+import gendiff.formaters.stylish as stylish
+import gendiff.formaters.plain as plain
 import pytest
 
 
@@ -38,6 +39,14 @@ def test5():
 def test_nested():
     f = open('tests/result.txt', 'r')
     diff_strig = generate_diff('tests/nested1.json','tests/nested2.json')
+    d = zip(diff_strig.split('\n'), f)
+    for k,v in d:
+        assert k.lower() == v.lower() or (k + '\n').lower() == v.lower()
+        
+        
+def test_nested_plain():
+    f = open('tests/result_flat.txt', 'r')
+    diff_strig = generate_diff('tests/nested1.json','tests/nested2.json', plain)
     d = zip(diff_strig.split('\n'), f)
     for k,v in d:
         assert k.lower() == v.lower() or (k + '\n').lower() == v.lower()
