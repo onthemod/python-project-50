@@ -2,25 +2,35 @@
 import argparse
 import json
 import yaml
+import sys
+sys.path.insert(0, '..')
+sys.path.insert(0, './gendiff')
+from treenode import create_added_node
+from treenode import create_removed_node
+from treenode import create_nonchanged_node
+from treenode import create_updated_node
+import stylish
 
 
 def generate_diff(file_path1, file_path2):
+    print(sys.path)
     diff_tree = generate_diff_tree(file_path1, file_path2)
-    return stringify(diff_tree)
+    print(diff_tree)
+    return stylish.stringify(diff_tree)
 
 
 def generate_diff_tree(file_path1, file_path2):
     file1_dict = get_dictionary_from_file(file_path1)
     file2_dict = get_dictionary_from_file(file_path2)
-    return get_diff_tree_of_dicts(file1_dict, file2_dict)
+    return get_diff_tree(file1_dict, file2_dict)
 
 
-def get_diff_tree_of_dicts(dict1, dict2):
+def get_diff_tree(dict1, dict2):
     dict1 = cut_null_values(dict1)
     dict2 = cut_null_values(dict2)
     result = []
     for key in get_keys(dict1, dict2):
-        diff_strings = get_diff_tuple_list(
+        diff_strings = get_diff_child_tree(
             key, dict1.get(key), dict2.get(key))
         result.extend(diff_strings)
     return result
@@ -52,63 +62,17 @@ def get_keys(dict1, dict2):
     return keylist
 
 
-def get_diff_tuple_list(key, value1, value2):
+def get_diff_child_tree(key, value1, value2):
     if value1 is None:
-        return [get_added_pair_tuple(key, value2)]
+        return [create_added_node(key, value2)]
     if value2 is None:
-        return [get_removed_pair_tuple(key, value1)]
+        return [create_removed_node(key, value1)]
     if value1 == value2:
-        return [get_non_changed_pair_tuple(key, value1)]
+        return [create_nonchanged_node(key, value1)]
     if isinstance(value1, dict) and isinstance(value2, dict):
-        return [get_non_changed_pair_tuple(
-            key, get_diff_tree_of_dicts(value1, value2))]
-    return [get_removed_pair_tuple(key, value1),
-            get_added_pair_tuple(key, value2)]
-
-
-def get_added_pair_tuple(key, value):
-    value = get_dict_list(value)
-    return ('+', key, value)
-
-
-def get_removed_pair_tuple(key, value):
-    value = get_dict_list(value)
-    return ('-', key, value)
-
-
-def get_non_changed_pair_tuple(key, value):
-    value = get_dict_list(value)
-    return (' ', key, value)
-
-
-def stringify(lst, inset=0):
-    res = '{\n'
-    spacing = inset * 4 * ' '
-    for item in lst:
-        res = res + spacing + string_of_item(item, inset)
-    res = res + spacing + '}'
-    return res
-
-
-def string_of_item(item, inset):
-    s, k, v = item
-    v = get_value_string(v, inset)
-    return f'  {s} {k}: {v}\n'
-
-
-def get_value_string(val, inset=0):
-    if isinstance(val, list):
-        return stringify(val, inset + 1)
-    return val
-
-
-def get_dict_list(d):
-    if isinstance(d, dict):
-        res = []
-        for k, v in d.items():
-            res.append(get_non_changed_pair_tuple(k, v))
-        return res
-    return d
+        return [create_nonchanged_node(
+            key, get_diff_tree(value1, value2))]
+    return [create_updated_node(key, value1, value2)]
 
 
 def main():
