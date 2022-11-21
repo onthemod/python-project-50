@@ -11,6 +11,7 @@ from treenode import create_nonchanged_node
 from treenode import create_updated_node
 import formaters.stylish as stylish
 import formaters.plain as plain
+import formaters.json as js
 
 
 def generate_diff(file_path1, file_path2, formater=stylish):
@@ -84,6 +85,8 @@ def main():
     formater = stylish
     if args.format == 'plain':
         formater = plain
+    elif args.format == 'json':
+        formater = js
     res = generate_diff(args.first_file, args.second_file, formater)
     print(res)
 
