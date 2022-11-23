@@ -3,12 +3,12 @@ import argparse
 import json
 import yaml
 import sys
-sys.path.insert(0, '..')
-sys.path.insert(0, './gendiff')
-from treenode import create_added_node
-from treenode import create_removed_node
-from treenode import create_nonchanged_node
-from treenode import create_updated_node
+#sys.path.insert(0, '..')
+#sys.path.insert(0, './gendiff')
+from gendiff.treenode import create_added_node
+from gendiff.treenode import create_removed_node
+from gendiff.treenode import create_nonchanged_node
+from gendiff.treenode import create_updated_node
 import formaters.stylish as stylish
 import formaters.plain as plain
 import formaters.json as jsonin
