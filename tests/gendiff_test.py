@@ -46,10 +46,10 @@ def test_nested():
         
 def test_nested_plain():
     f = open('tests/result_flat.txt', 'r')
-    diff_strig = generate_diff('tests/nested1.json','tests/nested2.json', plain)
+    diff_strig = generate_diff('tests/nested1.json','tests/nested2.json', 'plain')
     d = zip(diff_strig.split('\n'), f)
     for k,v in d:
-        assert k.lower() == v.lower() or (k + '\n').lower() == v.lower()
+        assert k.strip() == v.strip()
 
 
 def test_of_dict():
