@@ -4,6 +4,7 @@ from gendiff.treenode import is_removed
 from gendiff.treenode import get_key
 from gendiff.treenode import get_value
 
+
 def stringify(lst):
     res = []
     for item in lst:
@@ -11,9 +12,9 @@ def stringify(lst):
     return '\n'.join(res)
 
 
-def strings_of_item(item, parent_key = ''):
+def strings_of_item(item, parent_key=''):
     key = get_key(item)
-    if len(parent_key)>0:
+    if len(parent_key) > 0:
         key = parent_key + '.' + key
     value = get_value(item)
     if is_added(item):
@@ -33,7 +34,7 @@ def strings_of_item(item, parent_key = ''):
     return []
 
 
-def get_value_string(val):#false true учесть
+def get_value_string(val):
     if val == 'null':
         return 'null'
     if isinstance(val, bool):

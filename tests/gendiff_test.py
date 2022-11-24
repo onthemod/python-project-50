@@ -2,7 +2,6 @@ from gendiff.scripts.gendiff import generate_diff
 from gendiff.scripts.gendiff import get_dictionary_from_file
 from gendiff.scripts.gendiff import generate_diff_tree
 import gendiff.formaters.stylish as stylish
-import gendiff.formaters.plain as plain
 import pytest
 
 
@@ -18,17 +17,17 @@ def dict_string_inset_1():
 
 def test4():
     file1_dict = get_dictionary_from_file('tests/file1.json')
-    assert file1_dict=={'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}
+    assert file1_dict == {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22', 'follow': False}
 
 
 def test_yaml(dictionary1):
     file1_dict = get_dictionary_from_file('tests/file1.yaml')
-    assert file1_dict==dictionary1
+    assert file1_dict == dictionary1
 
 
 def test_yml(dictionary1):
     file1_dict = get_dictionary_from_file('tests/file1.yml')
-    assert file1_dict==dictionary1
+    assert file1_dict == dictionary1
 
 
 def test5():
@@ -56,9 +55,9 @@ def test_of_dict():
     test_list = [(' ', 'common', [('+', 'follow', False), (' ', 'setting1', 'Value 1'),
                 ('-', 'setting2', 200), ('-+', 'setting3', True, 'null'),
                 ('+', 'setting4', 'blah blah'), ('+', 'setting5', [( ' ', 'key5', 'value5')]),
-                ( ' ', 'setting6', [(' ', 'doge', [( '-+', 'wow', '', 'so much')]),
+                (' ', 'setting6', [(' ', 'doge', [( '-+', 'wow', '', 'so much')]),
                 (' ', 'key', 'value'),('+',  'ops', 'vops')])]),(' ', 'group1', [('-+', 'baz', 'bas', 'bars'),
-                ( ' ', 'foo', 'bar'), ( '-+',  'nest', [( ' ', 'key', 'value')], 'str')])]
+                (' ', 'foo', 'bar'), ('-+',  'nest', [(' ', 'key', 'value')], 'str')])]
     res = generate_diff_tree('tests/nested_short1.json', 'tests/nested_short2.json')
     print(test_list)
     print(res)
