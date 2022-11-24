@@ -33,4 +33,8 @@ def string_of_single_item(item, inset):
 def get_value_string(val, inset=0):
     if isinstance(val, list):
         return stringify(val, inset + 1)
+    if isinstance(val, bool):
+        if val:
+            return 'true'
+        return 'false'
     return val
