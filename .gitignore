@@ -3,3 +3,4 @@ setup.cfg
 dist
 .coverage
 coverage.xml
+__pycache__/

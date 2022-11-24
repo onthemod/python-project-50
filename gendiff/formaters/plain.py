@@ -38,6 +38,8 @@ def get_value_string(val):#false true учесть
         return 'null'
     if isinstance(val, bool):
         return str(val).lower()
+    if isinstance(val, int):
+        return str(val)
     if isinstance(val, list):
         return '[complex value]'
     return f'\'{val}\''
