@@ -1,8 +1,8 @@
-from treenode import is_updated
-from treenode import is_added
-from treenode import is_removed
-from treenode import get_key
-from treenode import get_value
+from gendiff.treenode import is_updated
+from gendiff.treenode import is_added
+from gendiff.treenode import is_removed
+from gendiff.treenode import get_key
+from gendiff.treenode import get_value
 
 def stringify(lst):
     res = []
