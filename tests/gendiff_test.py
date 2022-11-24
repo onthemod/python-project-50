@@ -39,25 +39,25 @@ def test_nested():
     f = open('tests/result.txt', 'r')
     diff_strig = generate_diff('tests/nested1.json', 'tests/nested2.json')
     d = zip(diff_strig.split('\n'), f)
-    for k,v in d:
+    for k, v in d:
         assert k.lower() == v.lower() or (k + '\n').lower() == v.lower()
-        
-        
+
+
 def test_nested_plain():
     f = open('tests/result_flat.txt', 'r')
     diff_strig = generate_diff('tests/nested1.json', 'tests/nested2.json', 'plain')
     d = zip(diff_strig.split('\n'), f)
-    for k,v in d:
+    for k, v in d:
         assert k.strip() == v.strip()
 
 
 def test_of_dict():
     test_list = [(' ', 'common', [('+', 'follow', False), (' ', 'setting1', 'Value 1'),
-                ('-', 'setting2', 200), ('-+', 'setting3', True, 'null'),
-                ('+', 'setting4', 'blah blah'), ('+', 'setting5', [(' ', 'key5', 'value5')]),
-                (' ', 'setting6', [(' ', 'doge', [('-+', 'wow', '', 'so much')]),
-                (' ', 'key', 'value'),('+', 'ops', 'vops')])]),(' ', 'group1', [('-+', 'baz', 'bas', 'bars'),
-                (' ', 'foo', 'bar'), ('-+', 'nest', [(' ', 'key', 'value')], 'str')])]
+                 ('-', 'setting2', 200), ('-+', 'setting3', True, 'null'),
+                 ('+', 'setting4', 'blah blah'), ('+', 'setting5', [(' ', 'key5', 'value5')]),
+                 (' ', 'setting6', [(' ', 'doge', [('-+', 'wow', '', 'so much')]),
+                 (' ', 'key', 'value'), ('+', 'ops', 'vops')])]), (' ', 'group1', [('-+', 'baz', 'bas', 'bars'),
+                 (' ', 'foo', 'bar'), ('-+', 'nest', [(' ', 'key', 'value')], 'str')])]
     res = generate_diff_tree('tests/nested_short1.json', 'tests/nested_short2.json')
     print(test_list)
     print(res)
