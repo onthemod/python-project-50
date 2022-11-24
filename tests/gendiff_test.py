@@ -56,8 +56,10 @@ def test_of_dict():
                  ('-', 'setting2', 200), ('-+', 'setting3', True, 'null'),
                  ('+', 'setting4', 'blah blah'), ('+', 'setting5', [(' ', 'key5', 'value5')]),
                  (' ', 'setting6', [(' ', 'doge', [('-+', 'wow', '', 'so much')]),
-                 (' ', 'key', 'value'), ('+', 'ops', 'vops')])]), (' ', 'group1', [('-+', 'baz', 'bas', 'bars'),
-                 (' ', 'foo', 'bar'), ('-+', 'nest', [(' ', 'key', 'value')], 'str')])]
+                                    (' ', 'key', 'value'), ('+', 'ops', 'vops')])]),
+                 (' ', 'group1', [('-+', 'baz', 'bas', 'bars'),
+                                  (' ', 'foo', 'bar'),
+                                  ('-+', 'nest', [(' ', 'key', 'value')], 'str')])]
     res = generate_diff_tree('tests/nested_short1.json', 'tests/nested_short2.json')
     print(test_list)
     print(res)
