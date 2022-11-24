@@ -9,9 +9,9 @@ from gendiff.treenode import create_added_node
 from gendiff.treenode import create_removed_node
 from gendiff.treenode import create_nonchanged_node
 from gendiff.treenode import create_updated_node
-import formaters.stylish as stylish
-import formaters.plain as plain
-import formaters.json as jsonin
+import gendiff.formaters.stylish as stylish
+import gendiff.formaters.plain as plain
+import gendiff.formaters.json as jsonin
 
 
 def generate_diff(file_path1, file_path2, formater=stylish):
