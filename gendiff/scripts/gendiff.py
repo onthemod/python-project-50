@@ -3,8 +3,8 @@ import argparse
 import json
 import yaml
 import sys
-sys.path.insert(0, '..')
-sys.path.insert(0, './gendiff')
+#sys.path.insert(0, '..')
+#sys.path.insert(0, './gendiff')
 from gendiff.treenode import create_added_node
 from gendiff.treenode import create_removed_node
 from gendiff.treenode import create_nonchanged_node
