@@ -1,4 +1,4 @@
-from treenode import is_updated
+from gendiff.treenode import is_updated
 
 def stringify(lst, inset=0):
     res = '{\n'
