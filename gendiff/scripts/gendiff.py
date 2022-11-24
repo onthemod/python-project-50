@@ -2,7 +2,6 @@
 import argparse
 import json
 import yaml
-import sys
 from gendiff.treenode import create_added_node
 from gendiff.treenode import create_removed_node
 from gendiff.treenode import create_nonchanged_node
