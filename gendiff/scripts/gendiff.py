@@ -14,8 +14,13 @@ import gendiff.formaters.plain as plain
 import gendiff.formaters.json as jsonin
 
 
-def generate_diff(file_path1, file_path2, formater=stylish):
+def generate_diff(file_path1, file_path2, formater_name='stylish'):
     diff_tree = generate_diff_tree(file_path1, file_path2)
+    formater = stylish
+    if formater_name == 'plain':
+        formater = plain
+    elif formater_name == 'json':
+        formater = jsonin
     return formater.stringify(diff_tree)
 
 
@@ -82,12 +87,7 @@ def main():
     parser.add_argument('second_file', type=str)
     parser.add_argument('-f', '--format', type=str, help='set format of output')
     args = parser.parse_args()
-    formater = stylish
-    if args.format == 'plain':
-        formater = plain
-    elif args.format == 'json':
-        formater = jsonin
-    res = generate_diff(args.first_file, args.second_file, formater)
+    res = generate_diff(args.first_file, args.second_file, args.format)
     print(res)
 
 
